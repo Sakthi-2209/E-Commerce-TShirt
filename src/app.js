@@ -37,6 +37,13 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'API is running' });
 });
 
+app.get('/api/test', (req, res) => {
+  res.status(200).json({ 
+    message: 'Test endpoint is working successfully!', 
+    timestamp: new Date().toISOString() 
+  });
+});
+
 app.use(notFound);
 app.use(errorHandler);
 
