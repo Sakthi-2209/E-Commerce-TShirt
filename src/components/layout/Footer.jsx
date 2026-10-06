@@ -1,12 +1,13 @@
 import { Shield, Mail, Phone, MapPin } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Footer = () => {
+  const location = useLocation();
   return (
     <footer style={{ backgroundColor: 'var(--bg-secondary)', padding: '2rem 0 1.5rem', borderTop: '1px solid var(--border-color)' }}>
       <div className="container">
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem', marginBottom: '2rem' }}>
+        {location.pathname !== '/admin-setup' && (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem', marginBottom: '2rem' }}>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <div style={{ fontSize: '1.125rem', fontWeight: 700, letterSpacing: '-0.05em' }}>STYLEHUB</div>
@@ -37,8 +38,9 @@ const Footer = () => {
           </div>
 
         </div>
+        )}
 
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', borderTop: location.pathname !== '/admin-setup' ? '1px solid var(--border-color)' : 'none', paddingTop: location.pathname !== '/admin-setup' ? '1.5rem' : '0' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
             © {new Date().getFullYear()} STYLEHUB. All rights reserved.
           </div>

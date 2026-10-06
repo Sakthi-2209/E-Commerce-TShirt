@@ -18,7 +18,7 @@ const AdminLayout = () => {
   const confirmLogout = () => {
     setShowLogoutModal(false);
     logout();
-    navigate('/login');
+    navigate('/admin-setup');
   };
 
   const navItems = [

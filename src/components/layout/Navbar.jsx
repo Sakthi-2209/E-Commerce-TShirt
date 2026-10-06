@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ShoppingBag, User, LogOut, Menu, Shield, Search } from 'lucide-react';
 import { AuthContext } from '../../context/AuthContext';
 import api from '../../services/api';
@@ -7,6 +7,7 @@ import api from '../../services/api';
 const Navbar = () => {
   const { user, role, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
   const [cartCount, setCartCount] = useState(0);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -43,13 +44,16 @@ const Navbar = () => {
             STYLEHUB
           </Link>
 
-          <nav className="nav-desktop" style={{ display: 'none', gap: '1.5rem' }}>
-            <Link to="/" style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Home</Link>
-            <Link to="/shop" style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Shop</Link>
-          </nav>
+          {location.pathname !== '/admin-setup' && (
+            <nav className="nav-desktop" style={{ display: 'none', gap: '1.5rem' }}>
+              <Link to="/" style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Home</Link>
+              <Link to="/shop" style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Shop</Link>
+            </nav>
+          )}
         </div>
 
-        <div className="flex items-center gap-4">
+        {location.pathname !== '/admin-setup' && (
+          <div className="flex items-center gap-4">
           <Link to="/shop" style={{ display: 'flex', alignItems: 'center', color: 'var(--text-secondary)' }} title="Search Products">
             <Search size={20} strokeWidth={1.5} />
           </Link>
@@ -86,8 +90,8 @@ const Navbar = () => {
           <button className="menu-mobile" style={{ color: 'var(--text-secondary)' }}>
             <Menu size={20} strokeWidth={1.5} />
           </button>
-
         </div>
+        )}
       </div>
       <style>{`
         @media (min-width: 768px) {

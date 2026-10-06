@@ -11,7 +11,7 @@ const AdminSetup = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
-  const { adminRegister, login } = useContext(AuthContext);
+  const { adminRegister, adminLogin } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -22,12 +22,8 @@ const AdminSetup = () => {
     try {
       if (isLogin) {
 
-        const role = await login(email, password);
-        if (role === 'admin') navigate('/admin/dashboard');
-        else {
-
-          navigate('/');
-        }
+        await adminLogin(email, password);
+        navigate('/admin/dashboard');
       } else {
         await adminRegister(name, email, password);
         navigate('/admin/dashboard');

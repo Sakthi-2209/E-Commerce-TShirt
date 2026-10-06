@@ -17,12 +17,8 @@ const Login = () => {
     setLoading(true);
     
     try {
-      const role = await login(email, password);
-      if (role === 'admin') {
-        navigate('/admin/dashboard');
-      } else {
-        navigate('/');
-      }
+      await login(email, password);
+      navigate('/');
     } catch (err) {
       setError(err.message || 'Login failed');
     } finally {

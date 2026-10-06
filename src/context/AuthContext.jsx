@@ -5,7 +5,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [role, setRole] = useState(null); // 'customer' or 'admin'
+  const [role, setRole] = useState(null); 
   const [loading, setLoading] = useState(true);
   const [toastMsg, setToastMsg] = useState('');
 
@@ -37,19 +37,21 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-
       const { data } = await api.post('/customers/auth/login', { email, password });
       handleLoginSuccess(data, 'customer');
       return 'customer';
     } catch (err) {
+      throw new Error(err.response?.data?.message || 'Invalid email or password');
+    }
+  };
 
-      try {
-        const { data } = await api.post('/admin/auth/login', { email, password });
-        handleLoginSuccess(data, 'admin');
-        return 'admin';
-      } catch (adminErr) {
-        throw new Error('Invalid email or password');
-      }
+  const adminLogin = async (email, password) => {
+    try {
+      const { data } = await api.post('/admin/auth/login', { email, password });
+      handleLoginSuccess(data, 'admin');
+      return 'admin';
+    } catch (adminErr) {
+      throw new Error(adminErr.response?.data?.message || 'Invalid email or password');
     }
   };
 
@@ -87,14 +89,14 @@ export const AuthProvider = ({ children }) => {
   const adminRegister = async (name, email, password) => {
     try {
       await api.post('/admin/auth/register', { name, email, password });
-      await login(email, password);
+      await adminLogin(email, password);
     } catch (err) {
       throw new Error(err.response?.data?.message || 'Admin registration failed');
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, role, login, register, adminRegister, logout, loading }}>
+    <AuthContext.Provider value={{ user, role, login, adminLogin, register, adminRegister, logout, loading }}>
       {toastMsg && (
         <div style={{
           position: 'fixed',
