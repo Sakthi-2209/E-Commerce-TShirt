@@ -65,7 +65,7 @@ const Checkout = () => {
       if (data.isTestBypass) {
 
         sessionStorage.removeItem('appliedPromo');
-        navigate('/profile', { replace: true, state: { fromCheckout: true } });
+        navigate('/profile', { replace: true, state: { fromCheckout: true, orderSuccess: true } });
         return;
       }
       
@@ -84,7 +84,7 @@ const Checkout = () => {
               razorpay_signature: response.razorpay_signature
             });
             sessionStorage.removeItem('appliedPromo');
-            navigate('/profile', { replace: true, state: { fromCheckout: true } });
+            navigate('/profile', { replace: true, state: { fromCheckout: true, orderSuccess: true } });
           } catch (err) {
             setGlobalError('Payment verification failed.');
           }

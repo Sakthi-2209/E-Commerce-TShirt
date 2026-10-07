@@ -12,6 +12,9 @@ const Profile = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fullscreenItem, setFullscreenItem] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showSuccess, setShowSuccess] = useState(location.state?.orderSuccess || false);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -29,14 +32,36 @@ const Profile = () => {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (location.state?.orderSuccess) {
+      window.history.replaceState({}, document.title);
+      
+      const timer = setTimeout(() => {
+        setShowSuccess(false);
+      }, 3000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [location]);
+
   if (!user) {
     navigate('/login');
     return null;
   }
 
+  const totalPages = Math.ceil(orders.length / itemsPerPage);
+  const currentOrders = orders.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem', minHeight: 'calc(100vh - 64px - 200px)' }}>
       <BackButton onClick={() => location.state?.fromCheckout ? navigate('/shop', { replace: true, state: { fromCheckout: true } }) : navigate(-1)} />
+      
+      {showSuccess && (
+        <div style={{ backgroundColor: '#dcfce7', color: '#166534', padding: '1rem', borderRadius: '4px', marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: '0.875rem', maxWidth: '400px', margin: '0 auto 2rem' }}>
+          Order placed successfully!
+        </div>
+      )}
+
       <div style={{ marginBottom: '3rem', paddingBottom: '2rem', borderBottom: '1px solid var(--border-color)' }}>
         <h1 style={{ fontSize: '2rem', fontWeight: 700, letterSpacing: '-0.025em' }}>My Profile</h1>
         <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>{user.firstName} {user.lastName} • {user.email}</p>
@@ -57,14 +82,14 @@ const Profile = () => {
             <thead>
               <tr style={{ backgroundColor: 'var(--bg-secondary)', color: 'var(--text-secondary)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 <th style={{ padding: '1rem', fontWeight: 600, border: '1px solid #d1d5db', width: '15%' }}>Order ID</th>
-                <th style={{ padding: '1rem', fontWeight: 600, border: '1px solid #d1d5db', width: '15%' }}>Date</th>
+                <th style={{ padding: '1rem', fontWeight: 600, border: '1px solid #d1d5db', width: '15%' }}>Order Date</th>
                 <th style={{ padding: '1rem', fontWeight: 600, border: '1px solid #d1d5db', width: '40%' }}>Items</th>
                 <th style={{ padding: '1rem', fontWeight: 600, border: '1px solid #d1d5db', width: '15%' }}>Total</th>
                 <th style={{ padding: '1rem', fontWeight: 600, border: '1px solid #d1d5db', width: '15%' }}>Status</th>
               </tr>
             </thead>
             <tbody>
-              {orders.map((order) => (
+              {currentOrders.map((order) => (
                 <tr key={order._id} style={{ fontSize: '0.875rem' }}>
                   <td style={{ padding: '1rem', fontFamily: 'monospace', color: 'var(--text-secondary)', border: '1px solid #d1d5db' }}>
                     #{order._id.substring(order._id.length - 8)}
@@ -112,6 +137,33 @@ const Profile = () => {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {!loading && totalPages > 1 && (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginTop: '2rem' }}>
+          {Array.from({ length: totalPages }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentPage(i + 1)}
+              style={{
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '1px solid var(--border-color)',
+                borderRadius: '4px',
+                backgroundColor: currentPage === i + 1 ? 'var(--text-primary)' : 'var(--bg-primary)',
+                color: currentPage === i + 1 ? 'var(--bg-primary)' : 'var(--text-primary)',
+                fontSize: '0.875rem',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              {i + 1}
+            </button>
+          ))}
         </div>
       )}
 

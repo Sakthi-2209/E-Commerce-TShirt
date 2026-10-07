@@ -7,6 +7,8 @@ const AdminOrders = () => {
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [fullscreenItem, setFullscreenItem] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const fetchOrders = async () => {
     try {
@@ -46,6 +48,9 @@ const AdminOrders = () => {
     }
   };
 
+  const totalPages = Math.ceil(orders.length / itemsPerPage);
+  const currentOrders = orders.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
@@ -67,10 +72,10 @@ const AdminOrders = () => {
           <tbody>
             {loading ? (
               <tr><td colSpan="6" style={{ padding: '2rem', color: 'var(--text-secondary)', textAlign: 'center', border: '1px solid #d1d5db' }}>Loading...</td></tr>
-            ) : orders.length === 0 ? (
+            ) : currentOrders.length === 0 ? (
               <tr><td colSpan="6" style={{ padding: '2rem', color: 'var(--text-secondary)', textAlign: 'center', border: '1px solid #d1d5db' }}>No orders yet.</td></tr>
             ) : (
-              orders.map(order => {
+              currentOrders.map(order => {
                 const statusColors = getStatusColor(order.status);
                 
                 return (
@@ -126,6 +131,33 @@ const AdminOrders = () => {
           </tbody>
         </table>
       </div>
+
+      {!loading && totalPages > 1 && (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginTop: '2rem' }}>
+          {Array.from({ length: totalPages }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentPage(i + 1)}
+              style={{
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '1px solid var(--border-color)',
+                borderRadius: '4px',
+                backgroundColor: currentPage === i + 1 ? 'var(--text-primary)' : 'var(--bg-primary)',
+                color: currentPage === i + 1 ? 'var(--bg-primary)' : 'var(--text-primary)',
+                fontSize: '0.875rem',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
+      )}
 
       {selectedOrder && (
         <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

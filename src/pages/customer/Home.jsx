@@ -12,7 +12,7 @@ const Home = () => {
     const fetchData = async () => {
       try {
         const [productsRes, discountRes] = await Promise.all([
-          api.get('/products?limit=8'),
+          api.get('/products?limit=10'),
           api.get('/discounts')
         ]);
         setProducts(productsRes.data.products || []);
@@ -57,7 +57,7 @@ const Home = () => {
               View All
             </Link>
           </div>
-          <ProductGrid products={products} loading={loading} />
+          <ProductGrid products={products} loading={loading} maxItems={10} />
         </div>
       </section>
     </div>

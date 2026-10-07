@@ -1,6 +1,6 @@
 import ProductCard from './ProductCard';
 
-const ProductGrid = ({ products, loading, filters }) => {
+const ProductGrid = ({ products, loading, filters, maxItems }) => {
   if (loading) {
     return <div style={{ padding: '4rem 0', textAlign: 'center', color: 'var(--text-secondary)' }}>Loading products...</div>;
   }
@@ -55,6 +55,17 @@ const ProductGrid = ({ products, loading, filters }) => {
     }
   });
 
+  const displayProducts = maxItems ? flattenedProducts.slice(0, maxItems) : flattenedProducts;
+
+  if (displayProducts.length === 0) {
+    return (
+      <div style={{ padding: '4rem 0', textAlign: 'center', width: '100%', color: 'var(--text-secondary)' }}>
+        <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>No products found</h3>
+        <p>Try adjusting your filters or search term to find what you're looking for.</p>
+      </div>
+    );
+  }
+
   return (
     <>
       <style>{`
@@ -71,7 +82,7 @@ const ProductGrid = ({ products, loading, filters }) => {
         }
       `}</style>
       <div className="product-grid-layout">
-        {flattenedProducts.map(product => (
+        {displayProducts.map(product => (
           <ProductCard key={product._id} product={product} />
         ))}
       </div>

@@ -70,12 +70,12 @@ const Navbar = () => {
             </Link>
           )}
 
-          {user ? (
+          {user && role === 'customer' ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <Link to="/profile" style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--text-primary)', textDecoration: 'none' }} title="Profile">
                 <User size={20} strokeWidth={1.5} />
                 <span style={{ fontSize: '0.875rem', fontWeight: 500, display: 'none' }} className="nav-desktop">
-                  {role === 'admin' ? 'Admin' : user.firstName}
+                  {user.firstName}
                 </span>
               </Link>
               <button onClick={() => setShowLogoutModal(true)} style={{ color: 'var(--text-secondary)' }}>
