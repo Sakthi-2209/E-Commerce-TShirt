@@ -174,26 +174,42 @@ const AdminOrders = () => {
             </div>
 
             <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginTop: '2rem', marginBottom: '1rem' }}>Pricing Breakdown</h3>
-            <div style={{ fontSize: '0.875rem', lineHeight: '1.5', backgroundColor: 'var(--bg-secondary)', padding: '1rem', borderRadius: '4px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Items Subtotal:</span>
-                <span>₹{selectedOrder.pricingBreakdown?.itemsPrice}</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Shipping:</span>
-                <span>₹{selectedOrder.pricingBreakdown?.shippingPrice}</span>
-              </div>
-              {selectedOrder.pricingBreakdown?.discountPrice > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', color: '#166534' }}>
-                  <span>Discount Applied:</span>
-                  <span>-₹{selectedOrder.pricingBreakdown?.discountPrice}</span>
+            {(() => {
+              const shirtPriceTotal = selectedOrder.orderItems.reduce((acc, item) => {
+                const basePrice = item.price - (item.customisationFeeApplied || 0);
+                return acc + (basePrice * item.quantity);
+              }, 0);
+              const customFee = selectedOrder.orderItems.reduce((acc, item) => acc + ((item.customisationFeeApplied || 0) * item.quantity), 0);
+
+              return (
+                <div style={{ fontSize: '0.875rem', lineHeight: '1.5', backgroundColor: 'var(--bg-secondary)', padding: '1rem', borderRadius: '4px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>Shirt Price:</span>
+                    <span>₹{shirtPriceTotal}</span>
+                  </div>
+                  {customFee > 0 && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                      <span style={{ color: 'var(--text-secondary)' }}>Customization Charge:</span>
+                      <span>₹{customFee}</span>
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>Shipping:</span>
+                    <span>₹{selectedOrder.pricingBreakdown?.shippingPrice}</span>
+                  </div>
+                  {selectedOrder.pricingBreakdown?.discountPrice > 0 && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', color: '#166534' }}>
+                      <span>Discount Applied:</span>
+                      <span>-₹{selectedOrder.pricingBreakdown?.discountPrice}</span>
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border-color)', fontWeight: 600, fontSize: '1rem' }}>
+                    <span>Total:</span>
+                    <span>₹{selectedOrder.pricingBreakdown?.totalPrice}</span>
+                  </div>
                 </div>
-              )}
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border-color)', fontWeight: 600, fontSize: '1rem' }}>
-                <span>Total:</span>
-                <span>₹{selectedOrder.pricingBreakdown?.totalPrice}</span>
-              </div>
-            </div>
+              );
+            })()}
           </div>
         </div>
       )}

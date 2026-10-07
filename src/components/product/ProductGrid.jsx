@@ -56,15 +56,26 @@ const ProductGrid = ({ products, loading, filters }) => {
   });
 
   return (
-    <div style={{ 
-      display: 'grid', 
-      gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', 
-      gap: '2rem' 
-    }}>
-      {flattenedProducts.map(product => (
-        <ProductCard key={product._id} product={product} />
-      ))}
-    </div>
+    <>
+      <style>{`
+        .product-grid-layout {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1rem;
+        }
+        @media (min-width: 640px) {
+          .product-grid-layout {
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 2rem;
+          }
+        }
+      `}</style>
+      <div className="product-grid-layout">
+        {flattenedProducts.map(product => (
+          <ProductCard key={product._id} product={product} />
+        ))}
+      </div>
+    </>
   );
 };
 

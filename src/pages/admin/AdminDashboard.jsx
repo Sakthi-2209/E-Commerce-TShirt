@@ -21,7 +21,7 @@ const AdminDashboard = () => {
   }, []);
 
   const statCards = [
-    { title: 'Total Revenue', value: `₹${stats.revenue}`, icon: IndianRupee },
+    { title: 'Total Revenue', value: `₹${Number(stats.revenue || 0).toFixed(2)}`, icon: IndianRupee },
     { title: 'Total Orders', value: stats.orders, icon: ShoppingBag },
     { title: 'Active Products', value: stats.products, icon: Package },
     { title: 'Customers', value: stats.customers, icon: Users },
@@ -42,7 +42,7 @@ const AdminDashboard = () => {
                 <div style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-secondary)' }}>{stat.title}</div>
                 <Icon size={20} style={{ color: 'var(--text-secondary)' }} />
               </div>
-              <div style={{ fontSize: '2rem', fontWeight: 600 }}>{stat.value}</div>
+              <div style={{ fontSize: '2rem', fontWeight: 600, wordBreak: 'break-word', overflowWrap: 'anywhere' }}>{stat.value}</div>
             </div>
           );
         })}

@@ -119,20 +119,19 @@ const Cart = () => {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
           {cart.items.map((item) => (
-            <div key={item._id} style={{ display: 'flex', gap: '1.5rem', paddingBottom: '2rem', borderBottom: '1px solid var(--border-color)' }}>
+            <div key={item._id} className="cart-item">
               
-              <div style={{ width: '120px', height: '160px', backgroundColor: '#ffffff', flexShrink: 0, position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div className="cart-item-img">
                 {getProductImage(item) ? (
                   <img src={getProductImage(item)} alt={item.product.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                 ) : (
                   <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>No Image</span>
                 )}
-
               </div>
               
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div className="cart-item-details">
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div className="cart-item-header">
                     <Link to={`/product/${item.product.slug}`} style={{ fontSize: '1.125rem', fontWeight: 600 }}>
                       {item.product.name}
                     </Link>
@@ -153,7 +152,7 @@ const Cart = () => {
                   )}
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="cart-item-controls">
                   <div style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--border-color)', borderRadius: '0px' }}>
                     <button onClick={() => handleQuantity(item._id, item.quantity, -1)} style={{ padding: '0.5rem 0.75rem' }}>-</button>
                     <span style={{ padding: '0 0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>{item.quantity}</span>
@@ -170,7 +169,7 @@ const Cart = () => {
           ))}
         </div>
 
-        <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '2rem', borderRadius: '0px', height: 'fit-content' }}>
+        <div className="order-summary-box">
           <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '1.5rem' }}>Order Summary</h2>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', color: 'var(--text-secondary)' }}>
             <span>Items Subtotal</span>
@@ -197,7 +196,7 @@ const Cart = () => {
                   setPromoCodeInput(e.target.value.toUpperCase());
                   setPromoError('');
                 }}
-                style={{ flex: 1, padding: '0.75rem', border: '1px solid var(--border-color)', outline: 'none' }}
+                style={{ flex: 1, minWidth: 0, padding: '0.75rem', border: '1px solid var(--border-color)', outline: 'none' }}
               />
               <button 
                 onClick={() => {
@@ -259,6 +258,55 @@ const Cart = () => {
       )}
 
       <style>{`
+        .order-summary-box {
+          background-color: var(--bg-secondary);
+          padding: 1.25rem;
+          height: fit-content;
+        }
+        .cart-item {
+          display: flex;
+          gap: 1rem;
+          padding-bottom: 1.5rem;
+          border-bottom: 1px solid var(--border-color);
+        }
+        .cart-item-img {
+          width: 80px;
+          height: 100px;
+          background-color: #ffffff;
+          flex-shrink: 0;
+          position: relative;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .cart-item-details {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          min-width: 0;
+        }
+        .cart-item-header {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.25rem;
+        }
+        .cart-item-controls {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
+          margin-top: 1rem;
+        }
+        @media (min-width: 640px) {
+          .order-summary-box { padding: 2rem; }
+          .cart-item { gap: 1.5rem; padding-bottom: 2rem; }
+          .cart-item-img { width: 120px; height: 160px; }
+          .cart-item-header { flex-direction: row; justify-content: space-between; align-items: flex-start; }
+          .cart-item-controls { flex-direction: row; justify-content: space-between; align-items: center; margin-top: 0; }
+        }
         @media (min-width: 1024px) {
           .cart-grid { grid-template-columns: 2fr 1fr !important; }
         }

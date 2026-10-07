@@ -97,6 +97,8 @@ const AdminDiscounts = () => {
           border: '1px solid var(--border-color)',
           marginBottom: '2rem',
           display: 'flex',
+          flexWrap: 'wrap',
+          gap: '1.5rem',
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>

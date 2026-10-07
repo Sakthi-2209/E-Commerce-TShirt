@@ -72,7 +72,13 @@ h1, h2, h3, h4, h5, h6 {
 .container {
   width: 100%;
   margin: 0 auto;
-  padding: 0 60px;
+  padding: 0 16px;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 60px;
+  }
 }
 
 .flex { display: flex; }
